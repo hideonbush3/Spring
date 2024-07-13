@@ -22,15 +22,19 @@ import spring.user.domain.User;
 // 이렇게 중복되는 관심사를 빼내서 다른 하나의 
 // 클래스로 옮기면 좋은 코드가 완성될 것이다
 public class UserDao {
-    public void add(User user) throws SQLException, ClassNotFoundException{
+
+    private Connection getConnection() throws SQLException, ClassNotFoundException{
         Class.forName("com.mysql.cj.jdbc.Driver");
-        Connection c = DriverManager.getConnection(
+        return DriverManager.getConnection(
             "jdbc:mysql://localhost/spring", "root", "root");
+    }
+
+    public void add(User user) throws SQLException, ClassNotFoundException{
+        Connection c = getConnection();
 
         PreparedStatement ps = c.prepareStatement(
             "insert into users(id, name, password) values(?,?,?)"
         );
-
         ps.setString(1, user.getId());
         ps.setString(2, user.getName());
         ps.setString(3, user.getPassword());
@@ -42,15 +46,12 @@ public class UserDao {
     }
 
     public User get(String id) throws ClassNotFoundException, SQLException{
-        Class.forName("com.mysql.cj.jdbc.Driver");
-        Connection c = DriverManager.getConnection(
-            "jdbc:mysql://localhost/spring", "root", "root");
+        Connection c = getConnection();
         
         PreparedStatement ps = c.prepareStatement(
             "select * from users where id = (?)"
         );
         ps.setString(1, id);
-
 
         ResultSet rs = ps.executeQuery();
         rs.next();

@@ -1,7 +1,6 @@
 package spring.user.dao;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -21,13 +20,8 @@ import spring.user.domain.User;
 // 관심사가 같은 부분이다
 // 이렇게 중복되는 관심사를 빼내서 다른 하나의 
 // 클래스로 옮기면 좋은 코드가 완성될 것이다
-public class UserDao {
-
-    private Connection getConnection() throws SQLException, ClassNotFoundException{
-        Class.forName("com.mysql.cj.jdbc.Driver");
-        return DriverManager.getConnection(
-            "jdbc:mysql://localhost/spring", "root", "root");
-    }
+public abstract class UserDao {
+    public abstract Connection getConnection() throws SQLException, ClassNotFoundException;
 
     public void add(User user) throws SQLException, ClassNotFoundException{
         Connection c = getConnection();

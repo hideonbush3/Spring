@@ -1,23 +1,20 @@
 import spring.user.dao.UserDao;
-import spring.user.domain.User;
+import spring.user.dao.MConnectionMaker;
+import spring.user.dao.OConnectionMaker;
+import spring.user.dao.ConnectionMaker;
 
 public class App {
-    public static void main(String[] args) throws Exception {
-        String id = "abc123";
-        String name = "austin";
-        String password = "helloworld";
+    public static void main(String[] args) throws Exception {        
+        // 1.
+        // UserDao userDao = new UserDao((ConnectionMaker) new MConnectionMaker());
 
-        User user = new User(id, name, password);
-        
-        UserDao userDao = new UserDao();
+        // 2.
+        ConnectionMaker c1 = new MConnectionMaker();
+        UserDao userDao1 = new UserDao(c1);
 
-        userDao.add(user);
-        
-        User savedUser = userDao.get(user.getId());
-        
-        System.out.printf("회원가입완료\n아이디: %s\n이름: %s\n비밀번호: %s",
-            savedUser.getId(),
-            savedUser.getName(),
-            savedUser.getPassword());
+        ConnectionMaker c2 = new OConnectionMaker();
+        UserDao userDao2 = new UserDao(c2);
+
+
     }
 }

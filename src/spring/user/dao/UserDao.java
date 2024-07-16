@@ -20,11 +20,15 @@ import spring.user.domain.User;
 // 관심사가 같은 부분이다
 // 이렇게 중복되는 관심사를 빼내서 다른 하나의 
 // 클래스로 옮기면 좋은 코드가 완성될 것이다
-public abstract class UserDao {
-    public abstract Connection getConnection() throws SQLException, ClassNotFoundException;
+public class UserDao{
+    private ConnectionMaker connectionMaker;
+
+    public UserDao(ConnectionMaker c){
+        this.connectionMaker = c;
+    }
 
     public void add(User user) throws SQLException, ClassNotFoundException{
-        Connection c = getConnection();
+        Connection c = connectionMaker.newConnection();
 
         PreparedStatement ps = c.prepareStatement(
             "insert into users(id, name, password) values(?,?,?)"
@@ -40,7 +44,7 @@ public abstract class UserDao {
     }
 
     public User get(String id) throws ClassNotFoundException, SQLException{
-        Connection c = getConnection();
+        Connection c = connectionMaker.newConnection();
         
         PreparedStatement ps = c.prepareStatement(
             "select * from users where id = (?)"
